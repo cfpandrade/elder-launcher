@@ -1,0 +1,9 @@
+{
+  "contacts": [
+    { "name": "Alice", "lookup": "Alice Smith", "phone": "+12025550101", "photo": "alice.jpg" },
+    { "name": "Bob", "lookup": "Bob Smith", "phone": "+12025550102" },
+    { "name": "Carol", "lookup": "Carol Jones" }
+  ],
+  "youtube": true,
+  "more": ["com.android.camera", "com.android.contacts"]
+}

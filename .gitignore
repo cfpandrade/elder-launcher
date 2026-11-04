@@ -1,0 +1,11 @@
+build/
+signing/
+*.apk
+*.idsig
+*.keystore
+*.jks
+# your own configuration: it has names, numbers and tokens
+contacts.json
+remote.json
+photos/
+!assets/contacts.json
