@@ -28,10 +28,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Optional: buttons and settings managed from your own server (the API is described in the README).
+/** Optional: buttons and settings managed from a control plane, a service you host on your own server (the API is
+ *  described in the README). Without remote.json the phone is standalone and this class does nothing.
  *
- *  The address and token live in a file pushed over ADB, never in the code:
- *    Android/data/&lt;package&gt;/files/remote.json  with  {"url": "https://...", "token": "..."}
+ *  The address and token live in remote.json, {"url": "https://...", "token": "..."}, which the installer hands over
+ *  through ConfigProvider; never in the code.
  *  What is downloaded (config.json and photos) is stored in app-private storage: without network the last download is used.
  *  It also reports the apps that can be opened, so the server can offer them for the "More" page. */
 final class RemoteConfig {
@@ -61,14 +62,17 @@ final class RemoteConfig {
 
     /** {url, token} from remote.json, or null if missing or invalid. */
     private static String[] target(Context c) {
-        File f = new File(c.getExternalFilesDir(null), "remote.json");
+        File f = ConfigProvider.remote(c);
         if (!f.isFile()) return null;
         try {
             JSONObject o = new JSONObject(read(new java.io.FileInputStream(f)));
             String url = o.optString("url", "").trim();
             String token = o.optString("token", "").trim();
             while (url.endsWith("/")) url = url.substring(0, url.length() - 1);
-            if (!url.startsWith("https://") && !url.startsWith("http://")) return null;
+            if (!url.startsWith("https://")) {          // Android blocks cleartext traffic for this app
+                Log.w(Config.TAG, "remote.json: the url must start with https://");
+                return null;
+            }
             if (token.isEmpty()) return null;
             return new String[]{url, token};
         } catch (Exception e) {

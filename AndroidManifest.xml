@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.cfpandrade.elderlauncher"
-    android:versionCode="1"
-    android:versionName="0.1.0">
+    android:versionCode="2"
+    android:versionName="2.0.0">
 
     <uses-sdk android:minSdkVersion="30" android:targetSdkVersion="30" />
 
@@ -135,6 +135,13 @@
             </intent-filter>
             <meta-data android:name="android.accessibilityservice" android:resource="@xml/power_menu_guard" />
         </service>
+
+        <!-- only ADB can use it: the installer hands over contacts, photos and the server address -->
+        <provider
+            android:name=".ConfigProvider"
+            android:authorities="io.github.cfpandrade.elderlauncher.config"
+            android:exported="true"
+            android:permission="android.permission.DUMP" />
 
         <service
             android:name=".CallWatcherService"

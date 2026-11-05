@@ -78,7 +78,7 @@ final class Config {
     }
 
     private static String defaultJson(Context c) {
-        File local = new File(c.getExternalFilesDir(null), "contacts.json");
+        File local = ConfigProvider.contacts(c);
         if (local.isFile()) {
             try {
                 String s = readAll(new FileInputStream(local));
@@ -97,7 +97,8 @@ final class Config {
 
     /** The configuration in contacts.json format, from the first source available. */
     static String json(Context c) {
-        String r = RemoteConfig.asContacts(c);
+        // without remote.json the phone is standalone: a copy left by a previous server must not hide contacts.json
+        String r = RemoteConfig.configured(c) ? RemoteConfig.asContacts(c) : null;
         return r != null ? r : defaultJson(c);
     }
 
@@ -206,7 +207,7 @@ final class Config {
             }
         }
         if (p.photoName == null) return null;
-        File ext = new File(c.getExternalFilesDir("photos"), p.photoName);
+        File ext = ConfigProvider.photo(c, p.photoName);
         if (ext.isFile()) {
             Bitmap b = BitmapFactory.decodeFile(ext.getPath());
             if (b != null) return b;
@@ -224,7 +225,7 @@ final class Config {
         Bitmap b = null;
         if (p.fullPhotoFile != null && new File(p.fullPhotoFile).isFile()) b = reduced(p.fullPhotoFile);
         if (b == null && p.photoName != null) {
-            File ext = new File(c.getExternalFilesDir("photos"), p.photoName);
+            File ext = ConfigProvider.photo(c, p.photoName);
             if (ext.isFile()) b = reduced(ext.getPath());
         }
         return b != null ? b : photo(c, p);
