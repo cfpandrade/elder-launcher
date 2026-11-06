@@ -15,7 +15,7 @@ import java.util.Map;
  *  See the settings table in the README. */
 public class SettingsReceiver extends BroadcastReceiver {
     static final String ACTION = "io.github.cfpandrade.elderlauncher.SETTING";
-    static final String[] BOOLEANS = {"auto_answer", "brightness_max", "volume_outside", "block_power_menu", "keep_wireless_debugging"};
+    static final String[] BOOLEANS = {"auto_answer", "brightness_max", "block_power_menu", "keep_wireless_debugging"};
     /** key to {minimum, maximum}. */
     static final Map<String, int[]> INTEGERS = new HashMap<>();
     static final String[] TIMES = {"night_from", "night_to"};

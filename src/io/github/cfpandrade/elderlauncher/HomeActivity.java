@@ -136,7 +136,7 @@ public class HomeActivity extends Activity {
         if (page != 1) showPage(1, false);
         sync();
         ringerToMaximum();
-        MediaVolume.check(this);
+        MediaVolume.watch(this);
         ScreenControl.check(this, 0);
         Intent state = registerReceiver(batteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         if (state != null) paintBattery(state);
@@ -702,7 +702,6 @@ public class HomeActivity extends Activity {
             return;
         }
         String pkg = i.getPackage() != null ? i.getPackage() : (i.getComponent() != null ? i.getComponent().getPackageName() : "");
-        if (Config.YOUTUBE.equals(pkg)) MediaVolume.youtubeOpened(this);     // the cap now, before anything plays
         try {
             Log.i(Config.TAG, "launching " + i);
             startActivity(i);

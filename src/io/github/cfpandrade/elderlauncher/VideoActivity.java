@@ -86,7 +86,7 @@ public class VideoActivity extends Activity {
         if (fresh == null || !CommandReceiver.VIDEO_ID.matcher(fresh).matches()) return false;
         id = fresh;
         if (web == null) CommandReceiver.key(this, android.view.KeyEvent.KEYCODE_MEDIA_PAUSE);   // pause whatever plays elsewhere
-        volume(i.getIntExtra("volume", MediaVolume.youtubeCap(this)));
+        volume(i.getIntExtra("volume", MediaVolume.level(this)));
         if (web != null) return true;                                  // screen already open: only the video changes
         builtIn();
         return true;

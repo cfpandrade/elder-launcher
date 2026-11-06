@@ -19,7 +19,7 @@ It is managed by the family, not by the person using it. Nothing on the phone ca
 - **Photo buttons.** Tap twice to call a contact over WhatsApp. The first tap highlights the button and asks for confirmation, so a stray touch does nothing.
 - **Incoming calls.** WhatsApp and phone calls open a full-screen page with the caller's photo, a huge "Answer" (one tap) and "Hang up" (two taps). It shows on a locked phone.
 - **Always loud.** Ringer, notifications and call voice go back to maximum if lowered, and silent and Do Not Disturb modes are turned off.
-- **Media volume.** While watching YouTube, volume returns to a cap (50 % by default). Elsewhere it stays at maximum.
+- **Steady media volume.** Music and videos stay at one chosen level (50 % by default), in every app. Any change returns to it, so it never sticks at maximum or at zero.
 - **Always bright.** Brightness returns to maximum a few seconds after being lowered, with an optional dimmer level at night.
 - **Remote commands (optional).** Play a video full screen above the lock screen, show a full-screen message read aloud, or show "Trying to reach you" with a one-tap call back button.
 - **Power menu guard (optional, experimental).** Closes the power-off, restart and airplane mode menu when the side button opens it by accident.
@@ -140,8 +140,7 @@ adb shell am broadcast \
 | `night_brightness` | `0` | Brightness at night, % of maximum. `0` means the same as daytime |
 | `night_from`, `night_to` | `22:00`, `07:00` | When night starts and ends |
 | `screen_timeout` | `0` | Seconds until the screen turns off. `0` leaves it alone |
-| `volume_youtube` | `50` | Media volume cap while watching YouTube, in % |
-| `volume_outside` | `true` | Outside YouTube, media volume at maximum |
+| `volume_youtube` | `50` | Fixed level of music and videos in every app, in % |
 | `auto_answer` | `false` | Answer calls from configured contacts after 20 seconds, on speaker |
 | `block_power_menu` | `false` | Power menu guard |
 | `keep_wireless_debugging` | `false` | Keep wireless debugging on and report its port |
@@ -154,7 +153,7 @@ These are broadcasts, so ADB, Home Assistant's companion app or any app on the p
 | --- | --- | --- |
 | `VIDEO` | `id`, `volume` | Plays a YouTube video full screen, above the lock screen |
 | `STOP` | `who` (optional) | Stops what is playing and goes home. With `who`, shows "Trying to reach you" with a call button |
-| `MEDIA` | `command`, `volume` | `pause`, `resume`, `stop`, or `lower`. `lower` is honored for 10 minutes outside YouTube |
+| `MEDIA` | `command` | `pause`, `resume`, `stop`, or `announce`. `announce` raises media to maximum for 60 seconds, for a voice announcement |
 | `MESSAGE` | `text`, `who` | Shows a full-screen message and reads it aloud, for 10 minutes at most |
 | `SETTING` | any [setting](#settings) | Changes settings |
 

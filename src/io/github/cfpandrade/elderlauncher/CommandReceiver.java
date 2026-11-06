@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
  *      media volume and opens the video full screen (see {@link VideoActivity}).</li>
  *  <li>{@code STOP}, optionally with {@code who}: stops whatever plays and returns home; with {@code who}, shows
  *      "Trying to reach you" with a button to call back (see {@link LookingForYouActivity}).</li>
- *  <li>{@code MEDIA} with {@code command} = pause | resume | stop | lower. "stop" equals STOP without {@code who}. "lower"
- *      (with optional {@code volume}, % of maximum) lowers media for a while (see {@link MediaVolume}).</li>
+ *  <li>{@code MEDIA} with {@code command} = pause | resume | stop | announce. "stop" equals STOP without {@code who}.
+ *      "announce" raises media to maximum during a voice announcement (see {@link MediaVolume}).</li>
  *  <li>{@code MESSAGE} with {@code text} and {@code who}: full-screen message read aloud (see {@link MessageActivity}).</li>
  *  </ul>
  *  Anything else is ignored. */
@@ -43,7 +43,7 @@ public class CommandReceiver extends BroadcastReceiver {
                 Log.w(Config.TAG, "video with an invalid id: ignored");
                 return;
             }
-            int vol = percent(extra(i, "volume"), MediaVolume.youtubeCap(c));
+            int vol = percent(extra(i, "volume"), MediaVolume.level(c));
             Log.i(Config.TAG, "video requested: " + id + " at " + vol + " %");
             Intent v = new Intent(c, VideoActivity.class).putExtra("id", id).putExtra("volume", vol);
             v.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -80,8 +80,8 @@ public class CommandReceiver extends BroadcastReceiver {
                 else key(c, KeyEvent.KEYCODE_MEDIA_PLAY);
             } else if ("stop".equals(command)) {
                 removeVideo(c, true);
-            } else if ("lower".equals(command)) {
-                MediaVolume.loweredRemotely(c, percent(extra(i, "volume"), MediaVolume.youtubeCap(c)));
+            } else if ("announce".equals(command)) {
+                MediaVolume.announce(c);
             }
         }
     }
@@ -100,7 +100,6 @@ public class CommandReceiver extends BroadcastReceiver {
     static void removeVideo(Context c, boolean withFocus) {
         if (withFocus) {
             stopAudio(c);
-            MediaVolume.stoppedRemotely(c);
         } else key(c, KeyEvent.KEYCODE_MEDIA_PAUSE);
         VideoActivity.close();
         Intent home = new Intent(c, HomeActivity.class);
